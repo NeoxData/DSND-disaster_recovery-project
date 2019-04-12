@@ -1,24 +1,87 @@
 import sys
+import re
+import pickle
+import numpy as np
+import pandas as pd
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
+
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+
+from sklearn.metrics import confusion_matrix,classification_report
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+import sqlalchemy as db
 
 
 def load_data(database_filepath):
-    pass
+    engine = db.create_engine(database_filepath)
+    conn= engine.connect()
+    df = pd.read_sql_table('cat_messages', con=conn)
+
+    X = df.message.values
+    Y = df.iloc[:,4:].values
+    category_names=df.columns[4:]
+    return X,Y,category_names
 
 
 def tokenize(text):
-    pass
+     # Normalize text
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
+
+    # Tokenize text
+    words = word_tokenize(text)
+
+    # Remove stop words
+    st_words = [w for w in words if w not in stopwords.words("english")]
+    
+    #lemmatizing
+    lemmatizer=WordNetLemmatizer()
+    
+    clean_tokens=[]
+    for tok in st_words:
+        clean_tok=lemmatizer.lemmatize(tok)
+        clean_tokens.append(clean_tok)
+    
+    return clean_tokens
 
 
 def build_model():
-    pass
+    pipeline = Pipeline([
+        ('text_pipeline', Pipeline ([
+            ('vect', CountVectorizer(tokenizer=tokenize)),
+            ('tfidf', TfidfTransformer())
+        ])),
+        ('multi', MultiOutputClassifier(RandomForestClassifier()))
+        ])
+
+    parameters = {'text_pipeline__vect__max_df': (0.4,0.5),
+                 'multi__estimator__n_estimators': [10, 15]
+                 }
+
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    y_pred=model.predict(X_test)
+
+    accuracy = (y_pred == Y_test).mean()
+    print("Accuracy:", accuracy)
+    
+    for i in range(len(category_names)):
+        print('\n Category name: {} \n {} '.format( category_names[i], classification_report(Y_test[:,i].astype(int), y_pred[:,i].astype(int))))
 
 
 def save_model(model, model_filepath):
-    pass
+    pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():
