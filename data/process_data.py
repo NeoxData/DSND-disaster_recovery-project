@@ -45,12 +45,16 @@ def clean_data(df):
 def save_data(df, database_filename):
     table ='cat_messages'
     engine = db.create_engine('sqlite:///'+database_filename)
+    
+    #drop if table already exists - to start fresh
     connection = engine.raw_connection()
     cursor = connection.cursor()
     command = "DROP TABLE IF EXISTS {};".format(table)
     cursor.execute(command)
     connection.commit()
     cursor.close()
+    
+    #saving to sql table
     df.to_sql(table, engine, index=False)
     
 
