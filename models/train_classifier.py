@@ -22,7 +22,7 @@ import sqlalchemy as db
 
 
 def load_data(database_filepath):
-    engine = db.create_engine(database_filepath)
+    engine = db.create_engine('sqlite:///' + database_filepath)
     conn= engine.connect()
     df = pd.read_sql_table('cat_messages', con=conn)
 
