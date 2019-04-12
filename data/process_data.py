@@ -21,7 +21,7 @@ def clean_data(df):
     for column in categories:
     # set each value to be the last character of the string
         categories[column] = categories[column].apply(lambda x:x[-1:])
-        
+
     #replace value 2 by 1 as anything above 1 is true
     categories=categories.replace(2,1)
 
@@ -43,8 +43,15 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    engine = db.create_engine(database_filename)
-    df.to_sql('cat_messages', engine, index=False)
+    table ='cat_messages'
+    engine = db.create_engine('sqlite:///'+database_filename)
+    connection = engine.raw_connection()
+    cursor = connection.cursor()
+    command = "DROP TABLE IF EXISTS {};".format(table)
+    cursor.execute(command)
+    connection.commit()
+    cursor.close()
+    df.to_sql(table, engine, index=False)
     
 
 
