@@ -7,6 +7,7 @@ def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories, on='id')
+    return df
 
 
 def clean_data(df):
@@ -34,11 +35,14 @@ def clean_data(df):
     # drop duplicates
     df.drop_duplicates(inplace=True)
 
+    return df
+
 
 
 def save_data(df, database_filename):
     engine = db.create_engine(database_filename)
-    df.to_sql('cat_messages', engine, index=False)  
+    df.to_sql('cat_messages', engine, index=False)
+    
 
 
 def main():
