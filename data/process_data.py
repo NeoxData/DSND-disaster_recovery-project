@@ -4,15 +4,41 @@ import pandas as pd
 import sqlalchemy as db
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = messages.merge(categories, on='id')
 
 
 def clean_data(df):
-    pass
+    #Split categories into separate category columns
+    categories = df['categories'].str.split(pat=";",expand=True)
+    row = categories.iloc[0]
+    category_colnames = row.apply(lambda x: x[:-2])
+    categories.columns = category_colnames
+
+    #Convert category values to just numbers 0 or 1
+    for column in categories:
+    # set each value to be the last character of the string
+        categories[column] = categories[column].apply(lambda x:x[-1:])
+
+    # convert column from string to numeric
+    categories[column] = categories[column].astype(str)
+
+    #Replace categories column in df with new category columns
+    # drop the original categories column from `df`
+    df.drop(['categories'], axis=1, inplace=True)
+
+    # concatenate the original dataframe with the new `categories` dataframe
+    df = pd.concat([df,categories],axis=1)
+
+    # drop duplicates
+    df.drop_duplicates(inplace=True)
+
 
 
 def save_data(df, database_filename):
-    pass  
+    engine = db.create_engine(database_filename)
+    df.to_sql('cat_messages', engine, index=False)  
 
 
 def main():
