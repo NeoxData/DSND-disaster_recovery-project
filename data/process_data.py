@@ -1,5 +1,7 @@
 import sys
-
+import numpy as np
+import pandas as pd
+import sqlalchemy as db
 
 def load_data(messages_filepath, categories_filepath):
     pass
