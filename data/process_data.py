@@ -21,9 +21,11 @@ def clean_data(df):
     for column in categories:
     # set each value to be the last character of the string
         categories[column] = categories[column].apply(lambda x:x[-1:])
+    #replace value 2 by 1 as anything above 1 is true
+    categories=categories.replace(2,1)
 
     # convert column from string to numeric
-    categories[column] = categories[column].astype(str)
+    categories[column] = categories[column].astype(int)
 
     #Replace categories column in df with new category columns
     # drop the original categories column from `df`
