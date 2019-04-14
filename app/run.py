@@ -7,7 +7,7 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar, Line, Scatter
+from plotly.graph_objs import Bar, Line
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -44,10 +44,26 @@ def index():
     genre_names = list(genre_counts.index)
     
     el=[]
-    el_names=['fire','water','cold']
-    for i in el_names:
+    col=['medical_help',
+ 'water',
+ 'food',
+ 'shelter',
+ 'clothing',
+ 'money',
+ 'missing_people',
+ 'refugees',
+ 'death',
+ 'electricity',
+ 'weather_related',
+ 'floods',
+ 'storm',
+ 'fire',
+ 'earthquake',
+ 'cold']
+    for i in col:
         counts=df.groupby(i).count()['message'][1]
         el.append(counts)
+
     
     
     # create visuals
@@ -74,13 +90,13 @@ def index():
         {
             'data': [
                 Line(
-                    x=el_names,
+                    x=col,
                     y=el
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of natur desaster',
+                'title': 'Distribution of needs after disaster',
                 'yaxis': {
                     'title': "Count"
                 },
