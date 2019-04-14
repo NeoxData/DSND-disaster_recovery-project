@@ -43,27 +43,16 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
-    el=[]
-    col=['medical_help',
- 'water',
- 'food',
- 'shelter',
- 'clothing',
- 'money',
- 'missing_people',
- 'refugees',
- 'death',
- 'electricity',
- 'weather_related',
- 'floods',
- 'storm',
- 'fire',
- 'earthquake',
- 'cold']
+    cat=[]
+    cat_name=[]
+    col=list(df.columns[4:])
     for i in col:
-        counts=df.groupby(i).count()['message'][1]
-        el.append(counts)
-
+        try:
+            counts=df.groupby(i).count()['message'][1]
+            cat.append(counts)
+            cat_name.append(i)
+        except:
+            continue
     
     
     # create visuals
@@ -89,19 +78,19 @@ def index():
         },
         {
             'data': [
-                Line(
-                    x=col,
-                    y=el
+                Bar(
+                    x=cat_name,
+                    y=cat
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of needs after disaster',
+                'title': 'Distribution of messages categories',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Element"
+                    'title': "Category"
                 }
             }
         }
