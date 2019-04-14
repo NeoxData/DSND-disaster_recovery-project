@@ -4,6 +4,7 @@ import pandas as pd
 import sqlalchemy as db
 
 def load_data(messages_filepath, categories_filepath):
+    #load data from different sources and merge it
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories, on='id')

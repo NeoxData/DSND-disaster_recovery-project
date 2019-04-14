@@ -12,7 +12,7 @@ nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('stopwords')
 
-from sklearn.metrics import confusion_matrix,classification_report
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
@@ -72,10 +72,12 @@ def build_model():
 
 def evaluate_model(model, X_test, Y_test, category_names):
     y_pred=model.predict(X_test)
-
+    
+    #Getting accuracy of the model
     accuracy = (y_pred == Y_test).mean()
     print("Accuracy:", accuracy)
-    
+
+    #Getting for each category some performance indicators(precision, recall,f1-score,support)
     for i in range(len(category_names)):
         print('\n Category name: {} \n {} '.format( category_names[i], classification_report(Y_test[:,i].astype(int), y_pred[:,i].astype(int))))
 
