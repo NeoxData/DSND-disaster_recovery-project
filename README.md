@@ -32,18 +32,21 @@ You will need to run in a terminal the following command at the project root dir
 
 -  ETL to clean and save in a database:
 
-  1. python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db
+     python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db
 
 -  ML pipeline to categorize the messages received:
 
-  2. python train_classifier.py ../data/DisasterResponse.db classifier.pkl
+     python train_classifier.py ../data/DisasterResponse.db classifier.pkl
 
 - Once the previous step is done, change root to the app folder to run the web app:
 
-  3. python run.py
+     python run.py
 
 -  Check in a browser the result: http://0.0.0.0:3001
 
-![My image](NeoxData.github.com/repository/img/image.jpg)
+## Screenshot of the web app:
+
+![Web_app_image](Images/Web_app_image.png)
+
 
 
