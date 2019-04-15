@@ -4,6 +4,16 @@ import pandas as pd
 import sqlalchemy as db
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Load data from multiple sources into Dataframe 
+
+    Input: 
+        messages_filepath: Path of the messages dataset
+        categories_filepath: path of the messages categories dataset
+    Output:
+        A merged dataframe of all sources
+    '''
+
     #load data from different sources and merge it
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -12,6 +22,15 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+       '''
+    Clean merged dataframe 
+    
+    Input: 
+        df: Merged dataframe from load_data function
+    Output:
+        A cleaned dataframe ready for ML pipeline
+    '''
+
     #Split categories into separate category columns
     categories = df['categories'].str.split(pat=";",expand=True)
     row = categories.iloc[0]
@@ -42,6 +61,16 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+ '''
+    Save model in a sql database using SQLAlchemy library
+
+    Input: 
+        df: merged dataframe from load_data function
+        database_filename: Name of the output sql database
+    Output:
+        A sql database
+    '''
+
     table ='cat_messages'
     engine = db.create_engine('sqlite:///'+database_filename)
     

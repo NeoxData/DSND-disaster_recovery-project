@@ -22,6 +22,16 @@ import sqlalchemy as db
 
 
 def load_data(database_filepath):
+        '''
+    Load data from database as dataframe
+
+    Input:
+        database_filepath: File path of sql database
+    Output:
+        X: Message data (features)
+        Y: Categories (target)
+        category_names: Labels for 36 categories
+    '''
     engine = db.create_engine('sqlite:///' + database_filepath)
     conn= engine.connect()
     df = pd.read_sql_table('cat_messages', con=conn)
@@ -33,6 +43,14 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+        '''
+    Tokenize and clean text
+
+    Input:
+        text: original message text
+    Output:
+        clean_tokens: Tokenized, stop words removed, and lemmatized text
+    '''
      # Normalize text
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
 
@@ -54,6 +72,13 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    Build a ML pipeline using countvectorizer,ifidf, random forest classifier and gridsearch
+
+    Input: None
+    Output:
+        Results of GridSearchCV
+    '''
     pipeline = Pipeline([
         ('text_pipeline', Pipeline ([
             ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -71,6 +96,18 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    Evaluate model performance using test data
+
+    Input: 
+        model: Model to be evaluated
+        X_test: Test data (features)
+        Y_test: True lables for Test data
+        category_names: Labels for 36 categories
+    Output:
+        Print accuracy and classfication report for each category
+    '''
+
     y_pred=model.predict(X_test)
     
     #Getting accuracy of the model
@@ -83,6 +120,16 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''
+    Save model as a pickle file 
+
+    Input: 
+        model: Model to be saved
+        model_filepath: Path of the output pickle file
+    Output:
+        A pickle file of saved model
+    '''
+    
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
