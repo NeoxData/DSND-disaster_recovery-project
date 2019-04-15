@@ -102,7 +102,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Input: 
         model: Model to be evaluated
         X_test: Test data (features)
-        Y_test: True lables for Test data
+        Y_test: True labels for test data
         category_names: Labels for 36 categories
     Output:
         Print accuracy and classfication report for each category
