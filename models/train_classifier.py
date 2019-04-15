@@ -22,7 +22,7 @@ import sqlalchemy as db
 
 
 def load_data(database_filepath):
-        '''
+    '''
     Load data from database as dataframe
 
     Input:
@@ -43,7 +43,7 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-        '''
+    '''
     Tokenize and clean text
 
     Input:
@@ -129,7 +129,7 @@ def save_model(model, model_filepath):
     Output:
         A pickle file of saved model
     '''
-    
+
     pickle.dump(model, open(model_filepath, 'wb'))
 
 

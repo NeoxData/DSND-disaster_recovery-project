@@ -22,7 +22,8 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
-       '''
+
+    '''
     Clean merged dataframe 
     
     Input: 
@@ -61,7 +62,7 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
- '''
+    '''
     Save model in a sql database using SQLAlchemy library
 
     Input: 
